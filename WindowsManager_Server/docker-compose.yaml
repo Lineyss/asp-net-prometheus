@@ -34,29 +34,34 @@ services:
     depends_on:
       - pgdb
 
-  prometheus:
-    image: prom/prometheus:latest
+  telegraf:
+    image: telegraf
     volumes:
-      - ./prometheus:/etc/prometheus/
-    container_name: prometheus
-    hostname: test
-    command: 
-      - --config.file=/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    restart: always
-    environment:
-      TZ: "Europe/Moscow"
+        - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    command: telegraf --config /etc/telegraf/telegraf.conf
+    container_name: telegraf
     networks:
       - net
     depends_on:
       - api
 
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=G8jyxaKIIzXe8NOTfztKv4spaIuNCzmfEca3JQRek6CpSvDnaT3QCep0UGUjSFj_yF8QpvyZV_Kf2EoTso4b_A==
+    networks:
+      - net
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    depends_on:
+      - telegraf
+
   grafana:
     image: grafana/grafana:latest
     user: root
-    depends_on:
-      - prometheus
     ports:
       - "3000:3000"
     volumes:
@@ -69,6 +74,8 @@ services:
       TZ: "Europe/Moscow"
     networks:
       - net
+    depends_on:
+      - influxdb
 
 networks:
   net:
@@ -76,3 +83,5 @@ networks:
 
 volumes:
   pgdata:
+  telegraf-config:
+  influxdb_data:
