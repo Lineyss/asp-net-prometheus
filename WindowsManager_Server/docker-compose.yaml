@@ -15,7 +15,7 @@ services:
       - pgdata:/var/lib/postgresql/data1
 
   api:
-    container_name: server_api
+    container_name: api
     hostname: api
     build: .
     ports:
@@ -28,7 +28,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=mypass123
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     volumes:
-      - .\Server.API\https:/https/ 
+      - .\Server.API\https:/https/
     networks:
       - net
     depends_on:
@@ -37,13 +37,15 @@ services:
   telegraf:
     image: telegraf
     volumes:
-        - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
     command: telegraf --config /etc/telegraf/telegraf.conf
     container_name: telegraf
     networks:
       - net
     depends_on:
       - api
+      - prometheus  # Telegraf зависит от Prometheus
+      - influxdb    # Telegraf пишет в InfluxDB
 
   influxdb:
     image: influxdb:latest
@@ -51,13 +53,34 @@ services:
     ports:
       - "8086:8086"
     environment:
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=G8jyxaKIIzXe8NOTfztKv4spaIuNCzmfEca3JQRek6CpSvDnaT3QCep0UGUjSFj_yF8QpvyZV_Kf2EoTso4b_A==
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin123
+      - DOCKER_INFLUXDB_INIT_ORG=123
+      - DOCKER_INFLUXDB_INIT_BUCKET=321
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=ynv_ukcFxzxjIo4idE9uQNuHhmUKcKg7WDIn5kOT1iXMXz60wXYYNuzrCtR-5lqH8DjRmsy_rME6VSePtqOGDw==
     networks:
       - net
     volumes:
       - influxdb_data:/var/lib/influxdb2
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus:/etc/prometheus/
+    container_name: prometheus
+    hostname: test
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    restart: always
+    environment:
+      TZ: "Europe/Moscow"
+    networks:
+      - net
     depends_on:
-      - telegraf
+      - api
 
   grafana:
     image: grafana/grafana:latest
@@ -83,5 +106,4 @@ networks:
 
 volumes:
   pgdata:
-  telegraf-config:
   influxdb_data:

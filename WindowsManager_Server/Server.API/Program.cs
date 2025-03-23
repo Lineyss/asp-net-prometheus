@@ -32,6 +32,9 @@ namespace Server.API
             builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
             builder.Services.AddScoped<IHostSoftwareRepository, HostSoftwareRepository>();
 
+            builder.Services.AddSingleton<InfluxDBModel>();
+
+            builder.Services.AddScoped<InfluxService>();
             builder.Services.AddScoped<MetricsService>();
 
             builder.Services.AddHostedService<MetricsBackgroundService>();
