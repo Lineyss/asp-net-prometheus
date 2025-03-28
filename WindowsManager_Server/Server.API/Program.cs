@@ -34,8 +34,8 @@ namespace Server.API
 
             builder.Services.AddSingleton<InfluxDBModel>();
 
-            builder.Services.AddScoped<InfluxService>();
             builder.Services.AddScoped<MetricsService>();
+            builder.Services.AddScoped<InfluixMetricService>();
 
             builder.Services.AddHostedService<MetricsBackgroundService>();
 

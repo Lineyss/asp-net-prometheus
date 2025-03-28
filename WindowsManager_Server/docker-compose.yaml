@@ -44,8 +44,8 @@ services:
       - net
     depends_on:
       - api
-      - prometheus  # Telegraf зависит от Prometheus
-      - influxdb    # Telegraf пишет в InfluxDB
+      - prometheus
+      - influxdb
 
   influxdb:
     image: influxdb:latest

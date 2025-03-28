@@ -6,6 +6,9 @@
 # dotenv files
 .env
 
+env/
+__pycache__/
+
 # User-specific files
 *.rsuser
 *.suo

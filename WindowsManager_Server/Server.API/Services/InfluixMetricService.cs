@@ -6,7 +6,7 @@ using InfluxDB.Client.Api.Domain;
 
 namespace Server.API.Services
 {
-    public class InfluxService(DataBaseContext dbContext, InfluxDBModel influxDb)
+    public class InfluixMetricService(DataBaseContext dbContext, InfluxDBModel influxDb)
     {
         private readonly DataBaseContext dbContext = dbContext;
         private readonly InfluxDBModel influxDb = influxDb;
@@ -21,7 +21,7 @@ namespace Server.API.Services
             foreach (var host in hostSoftwareCounts)
             {
                 var point1 = PointData
-                    .Measurement("aahostSoftwareCounts")
+                    .Measurement("aa_host_software_counts")
                     .Tag("host", host.Hostname)
                     .Field("value", host.Count)
                     .Timestamp(DateTime.UtcNow, WritePrecision.Ns);
@@ -32,7 +32,7 @@ namespace Server.API.Services
             var totalSoftwareCount = await dbContext.Softwares.CountAsync();
 
             var point = PointData
-                .Measurement("aaTotalSoftwareCount")
+                .Measurement("aa_total_software_count")
                 .Field("value", totalSoftwareCount)
                 .Timestamp(DateTime.UtcNow, WritePrecision.Ns);
 
@@ -42,7 +42,7 @@ namespace Server.API.Services
                 .CountAsync(hs => hs.Added >= DateTime.Now);
             
             point = PointData
-                .Measurement("aaSoftwareAddedLastHour")
+                .Measurement("aa_software_added_last_hour")
                 .Field("value", softwareAddedLastHour)
                 .Timestamp(DateTime.UtcNow, WritePrecision.Ns);
 

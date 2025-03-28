@@ -15,7 +15,7 @@ public partial class DataBaseContext : DbContext
     public virtual DbSet<SoftwareEntities> Softwares { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Host=pgdb;Database=windows_hosts;Username=postgres;Password=123");
+        => optionsBuilder.UseNpgsql("Host=postgres_server2:5432;Database=windows_hosts;Username=postgres;Password=123");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

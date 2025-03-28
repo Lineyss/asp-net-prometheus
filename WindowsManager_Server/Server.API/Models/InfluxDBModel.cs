@@ -4,8 +4,8 @@ namespace Server.API.Models
 {
     public class InfluxDBModel
     {
-        private readonly string token = "ynv_ukcFxzxjIo4idE9uQNuHhmUKcKg7WDIn5kOT1iXMXz60wXYYNuzrCtR-5lqH8DjRmsy_rME6VSePtqOGDw==";
-        private readonly string url = "http://influxdb:8086";
+        private readonly string token = "TP6yPb8jDeWv9J0Xaxbek5osrK_MP_KyhbXhUdD4Qe8T7wCWJT_Zl5Du1NzfGDwGPF_KXkCgxAJMYJWK8pZX2Q==";
+        private readonly string url = "http://localhost:8086";
 
         public readonly string bucket = "321";
         public readonly string org = "123";
